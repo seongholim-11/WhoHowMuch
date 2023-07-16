@@ -1,0 +1,65 @@
+@font-face {
+    font-family: "Ramche";
+    src: url("../assets/font/Ramche.ttf");
+}
+
+*{
+    margin: 0; padding: 0;
+}
+
+.App {
+    width: 1200px;
+    height: 1500px;
+    margin: 0 auto;
+    font-family: "Ramche";
+    font-weight: 400;
+    font-size: 1.5rem;
+    background: rgba(128, 0, 128, 0.3) url(../assets/img/theventi.png) no-repeat center center;
+    background-size: cover;
+
+    .whm{
+        text-align: center;
+    }
+
+    .rank{
+        display: flex;
+        text-align: center;
+        width: 100%;
+        height: 200px;
+        >.inner{
+            flex-basis: 33.333%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            .platform{
+                width: 100%; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; margin-top: 30px;
+            }
+            &:nth-child(1){
+                .platform{
+                    height: 80px; 
+                }
+            }
+            &:nth-child(2){
+                .platform{
+                    height: 120px; 
+                }
+            }
+            &:nth-child(3){
+                .platform{
+                    height: 60px;
+                }
+            }
+        }
+    }
+
+    .main {
+        background: rgba(0, 0, 0, 0.5);
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        text-align: center;
+        color: #fff;
+        text-shadow: 3px 3px #111;
+    }
+}
