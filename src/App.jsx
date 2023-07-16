@@ -36,6 +36,7 @@ function App() {
     getUsers();
     // 뭐든 동작할때마다 changed가 true값으로 변경되니까 화면을 그리고 다시 false로 돌려줘야지 다시 써먹는다.
     setChanged(false)
+    setNewMoney("")
     setRank("")
     // divRefs.current 배열에 요소에 대한 참조를 할당하기 전에
     // 해당 요소가 렌더링되도록 확인해야 함
@@ -88,6 +89,7 @@ function App() {
   ))
   return (
     <div className="App">
+      <p>업데이트 날짜: 2023-07-16</p>
       <h1 className='whm'>Who How Much</h1>
       <div className='rank'>
         <div className='inner'>
