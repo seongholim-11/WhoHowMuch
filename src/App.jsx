@@ -40,16 +40,23 @@ function App() {
     setRank("")
     // divRefs.current 배열에 요소에 대한 참조를 할당하기 전에
     // 해당 요소가 렌더링되도록 확인해야 함
-    for (let i = 0; i < 3; i++) {
+/*     for (let i = 0; i < 3; i++) {
       if (divRefs.current[i]) {
         let h1Text = divRefs.current[i].innerText;
         let newrank = h1Text.substr(0, 3);
         setRank((rank) => [...rank, newrank]);
         console.log(rank)
       }
-    }
-
-  }, [changed]) // 처음에 한번 그리고, changed가 불릴때마다 화면을 다시 그릴거다
+    } */
+    const updateRank = () => {
+      const newRank = divRefs.current
+        .filter((ref) => ref)
+        .map((ref) => ref.innerText.substr(0, 3));
+      setRank(newRank);
+    };
+  
+    updateRank();
+  }, [changed, rank]) // 처음에 한번 그리고, changed가 불릴때마다 화면을 다시 그릴거다
 
   // 업데이트 - U
   const updateUser = async (id, money) => {
