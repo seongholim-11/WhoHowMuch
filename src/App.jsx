@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 // 파이어베이서 파일에서 import 해온 db
 import { db } from './firebase-config'
 // db에 데이터에 접근을 도와줄 친구들
@@ -8,13 +8,14 @@ import './App.scss'
 function App() {
   // changed를 true로 바꿔주면 되지않을까?
   const [changed, setChanged] = useState(false);
+  const [showrank, setShowrank] = useState(false);
 
   // users 추가하고 삭제하는거 진행을 도와줄 state
   const [users, setUsers] = useState([]);
   console.log("🚀 ~ file: App.jsx:18 ~ App ~ users:", users)
 
   // db의 users 컬렉션을 가져옴
-  const usersCollectionRef = collection(db, "users");
+  const usersCollectionRef = collection(db, "whohowmuch");
 
   // 추가될 금액을 위한 state
   const [newMoney, setNewMoney] = useState("");
@@ -36,7 +37,7 @@ function App() {
     getUsers();
     // 뭐든 동작할때마다 changed가 true값으로 변경되니까 화면을 그리고 다시 false로 돌려줘야지 다시 써먹는다.
     setChanged(false)
-    setNewMoney("")
+    setShowrank(false)
     setRank("")
     // divRefs.current 배열에 요소에 대한 참조를 할당하기 전에
     // 해당 요소가 렌더링되도록 확인해야 함
@@ -56,12 +57,15 @@ function App() {
     };
   
     updateRank();
-  }, [changed, rank]) // 처음에 한번 그리고, changed가 불릴때마다 화면을 다시 그릴거다
+  }, [changed, showrank]) // 처음에 한번 그리고, changed가 불릴때마다 화면을 다시 그릴거다
+
+
+
 
   // 업데이트 - U
   const updateUser = async (id, money) => {
     // 내가 업데이트 하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
-    const userDoc = doc(db, "users", id)
+    const userDoc = doc(db, "whohowmuch", id)
     // 내가 업데이트 하고자 하는 key를 어떻게 업데이트할지 준비,, 중요한점이 db에는 문자열로 저장되어있다. 그래서 createUsers()함수안에서 money를 생성할때 숫자열로 형변환 해줘야한다
     const newField = { howmuch: money + Number(newMoney) };
     // updateDoc()을 이용해서 업데이트
@@ -70,17 +74,11 @@ function App() {
     setChanged(true)
   }
 
-  // 삭제 - D
-  const deleteUser = async (id) => {
-    // 내가 삭제하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
-    const userDoc = doc(db, "users", id);
-    // deleteDoc을 이용해서 삭제
-    await deleteDoc(userDoc);
-    // 화면 업데이트를 위한 state 변경
-    setChanged(true)
-  }
-
   const divRefs = useRef([]);
+
+  const showRank = () => {
+    setShowrank(true)
+  }
 
   // 띄워줄 데이터 key값에 고유ID를 넣어준다.
   const showUsers = users.sort((a, b) => b.howmuch - a.howmuch).map((value, index) => (<div key={value.id} ref={(element) => (divRefs.current[index] = element)}>
@@ -91,13 +89,13 @@ function App() {
     {/* 예를 들어, 두 명의 사용자가 있다고 가정해봅시다. 첫 번째 사용자의 ID가 "user1"이고 두 번째 사용자의 ID가 "user2"라고 가정하면, newMoney["user1"]은 첫 번째 사용자의 입력 값을 나타내고 newMoney["user2"]은 두 번째 사용자의 입력 값을 나타냅니다. */}
     <input type="number" placeholder='금액을 입력해주세요' value={newMoney[value.id]} onChange={(event) => { setNewMoney(event.target.value) }} />
     <button onClick={() => { updateUser(value.id, value.howmuch) }}>금액 더하기</button>
-    <button onClick={() => { deleteUser(value.id) }}>삭제</button>
   </div>
   ))
   return (
     <div className="App">
       <p>업데이트 날짜: 2023-07-16</p>
       <h1 className='whm'>Who How Much</h1>
+      <button className="showrank" onClick={showRank}>순위 보기</button>
       <div className='rank'>
         <div className='inner'>
           <div className='text'>
